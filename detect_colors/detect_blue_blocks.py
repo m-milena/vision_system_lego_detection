@@ -144,9 +144,9 @@ def mask_blue_to_holes(img_hsv, img_color_resized):
     #_, thresh = cv2.threshold(res_blue, 70, 255, cv2.THRESH_BINARY)
     #kernel = np.ones((2,2), np.uint8) 
     #res_blue = cv2.erode(thresh, kernel, iterations=2)
-    #res_blue = cv2.medianBlur(res_blue, 5)
-    #kernel = np.ones((3,3), np.uint8) 
-    #res_blue = cv2.dilate(res_blue, kernel, iterations=5)
+    res_blue = cv2.medianBlur(res_blue, 3)
+    kernel = np.ones((2,2), np.uint8) 
+    res_blue = cv2.dilate(res_blue, kernel, iterations=3)
     #kernel = np.ones((2,2), np.uint8) 
     #res_blue = cv2.erode(thresh, kernel, iterations=1)
     return res_blue
@@ -186,12 +186,12 @@ def detect_holes(res_blue, img, mask_white):
                 cv2.drawContours(mask_white,[box],0,(255,255,255),thickness=cv2.FILLED)
             elif min_x > 75 and min_x < 110:
                 if min_x == rect[1][0]:
-                    rect = ((rect[0][0], rect[0][1]), (10, rect[1][1]), rect[2])
+                    rect = ((rect[0][0], rect[0][1]), (15, rect[1][1]), rect[2])
                     box = cv2.boxPoints(rect)
                     box = np.int0(box)
                     cv2.drawContours(res_blue,[box],0,(0,0,0),thickness=cv2.FILLED)
                 elif min_x == rect[1][1]:
-                    rect = ((rect[0][0], rect[0][1]), (rect[1][0], 10), rect[2])
+                    rect = ((rect[0][0], rect[0][1]), (rect[1][0], 15), rect[2])
                     box = cv2.boxPoints(rect)
                     box = np.int0(box)
                     cv2.drawContours(res_blue,[box],0,(0,0,0),thickness=cv2.FILLED)
@@ -209,7 +209,7 @@ def detect_holes(res_blue, img, mask_white):
                         cv2.drawContours(mask_white,[box],0,(255,255,255),thickness=cv2.FILLED)
                         min_x = min(rect[1][0], rect[1][1])
                         max_x = max(rect[1][0], rect[1][1])
-                        if min_x < 70:
+                        if min_x < 60:
                             if max_x > 400:
                                 max_x = max_x / 2
                                 for key in blue_size.keys():
@@ -227,12 +227,12 @@ def detect_holes(res_blue, img, mask_white):
                     rect = ((rect[0][0], rect[0][1]), (rect[1][0]/3, rect[1][1]), rect[2])
                     box = cv2.boxPoints(rect)
                     box = np.int0(box)
-                    cv2.drawContours(res_blue,[box],0,(0,0,0),thickness=5)
+                    cv2.drawContours(res_blue,[box],0,(0,0,0),thickness=7)
                 elif min_x == rect[1][1]:
                     rect = ((rect[0][0], rect[0][1]), (rect[1][0], rect[1][1]/3), rect[2])
                     box = cv2.boxPoints(rect)
                     box = np.int0(box)
-                    cv2.drawContours(res_blue,[box],0,(0,0,0),thickness=5)
+                    cv2.drawContours(res_blue,[box],0,(0,0,0),thickness=7)
                 kernel = np.ones((3,3), np.uint8)
                 res_blue =  cv2.medianBlur(res_blue, 5)
                 res_blue = cv2.erode(res_blue, kernel, iterations=1)
@@ -240,7 +240,7 @@ def detect_holes(res_blue, img, mask_white):
                 detected_block = 0
                 for cnt in contours:
                     rect = cv2.minAreaRect(cnt)
-                    if rect[1][0]>35 and rect[1][1]>35:# and (rect[1][1]>55 or rect[1][0] > 55):
+                    if rect[1][0]>30 and rect[1][1]>30:# and (rect[1][1]>55 or rect[1][0] > 55):
                         detected_block = 1
                         box = cv2.boxPoints(rect)
                         box = np.int0(box)
@@ -263,3 +263,5 @@ def detect_holes(res_blue, img, mask_white):
                 break
 
     return blue_holes_cnt, detected_block
+            
+

@@ -56,7 +56,7 @@ def mask_yellow_to_holes(img_hsv, img_color_resized):
     res_yellow = cv2.bitwise_and(img_color_resized, img_color_resized, mask = mask_yellow)
     _, res_yellow = cv2.threshold(res_yellow, 100, 255, cv2.THRESH_BINARY)
     kernel = np.ones((2,2), np.uint8) 
-    res_yellow =  cv2.medianBlur(res_yellow, 3)
+    #res_yellow =  cv2.medianBlur(res_yellow, 3)
     #res_yellow = cv2.dilate(res_yellow, kernel, iterations=1)
     #res_yellow = cv2.erode(res_yellow, kernel, iterations=2)
     #res_yellow =  cv2.medianBlur(res_yellow, 1)
