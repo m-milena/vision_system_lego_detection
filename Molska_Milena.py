@@ -177,6 +177,13 @@ def function_for_detection(img):
         info = {'red': (red_blocks, red_holes), 'blue': (blue_blocks, blue_holes), \
             'white': (white_blocks, white_holes), 'grey': (gray_blocks, gray_holes), 'yellow': (yellow_blocks, yellow_holes)}
         blocks_info_array.append(info)
+
+        #key = ord('a')
+        #result = np.hstack((group, mask_blue))
+        #while key != ord('q'):
+        #    cv2.imshow('r', result)
+        #    key = cv2.waitKey(30)
+        #cv2.destroyAllWindows()
     
     return blocks_info_array
 
@@ -197,7 +204,9 @@ def main():
         
         data_to_write = {}
 
+       # imgs_names = [imgs_names[9]]
         for img in imgs_names:
+            print(img)
             current_img = cv2.imread(imgs_path+'/'+img, cv2.IMREAD_COLOR)
             current_img = cv2.resize(current_img, None, fx=0.15, fy=0.15)
             info_array = function_for_detection(current_img)
@@ -257,7 +266,8 @@ def main():
                         if int(data_to_current_img[i].get('yellow')) and int(info_array[j].get('yellow')[0]):
                             holes_2 += info_array[j].get('yellow')[1]
                         if int(data_to_current_img[i].get('white')) and int(info_array[j].get('white')[0]):
-                            holes_2  += info_array[j].get('white')[1]
+                            diff = math.fabs(int(data_to_current_img[i].get('white'))-int(info_array[j].get('white')[0]))
+                            holes_2  += info_array[j].get('white')[1] - diff
                         error_table.append(calculate_error)
                         holes_table.append(holes_2)
                     index = min(range(len(error_table)), key=error_table.__getitem__)
